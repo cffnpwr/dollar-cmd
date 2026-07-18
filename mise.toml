@@ -1,0 +1,8 @@
+[tools]
+yamlfmt = "0.21.0"
+tombi = "1.2.0"
+"aqua:numtide/treefmt" = "2.5.0"
+"aqua:taiki-e/cargo-llvm-cov" = "0.8.7"
+
+[settings]
+idiomatic_version_file_enable_tools = ["rust"]
