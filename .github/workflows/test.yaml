@@ -6,6 +6,13 @@ on:
   pull_request:
     branches:
       - main
+    paths:
+      - "**/*.rs"
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - "rust-toolchain.toml"
+      - "mise.toml"
+      - ".github/workflows/test.yaml"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
