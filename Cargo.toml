@@ -4,3 +4,7 @@ version = "0.0.0"
 edition = "2024"
 
 [dependencies]
+clap = { version = "4.6.2", features = ["derive"] }
+
+[dev-dependencies]
+rstest = "0.26.1"
