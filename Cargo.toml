@@ -11,3 +11,10 @@ clap = { version = "=4.6.2", features = ["derive"] }
 
 [dev-dependencies]
 rstest = "=0.26.1"
+
+[profile.release]
+opt-level = "s"
+strip = "symbols"
+lto = true
+panic = "abort"
+codegen-units = 1
