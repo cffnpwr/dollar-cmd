@@ -138,3 +138,34 @@ jobs:
 
           gh release upload "$TAG_NAME" ./*.tar.gz checksums.txt
           gh release edit "$TAG_NAME" --draft=false
+
+  bump-tap:
+    name: Bump homebrew tap
+    needs:
+      - release-please
+      - release
+    permissions: {}
+    timeout-minutes: 10
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Create GitHub App Token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        id: app-token
+        with:
+          app-id: ${{ secrets.RELEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: homebrew-tap
+          permission-actions: write
+
+      - name: Dispatch tap bump workflow
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          TAG_NAME: ${{ needs.release-please.outputs.tag_name }}
+          TAP_REPOSITORY: ${{ github.repository_owner }}/homebrew-tap
+        run: |-
+          set -eu
+          gh workflow run bump-formula.yaml \
+            --repo "$TAP_REPOSITORY" \
+            -f formula=dollar-cmd \
+            -f version="${TAG_NAME#v}"
