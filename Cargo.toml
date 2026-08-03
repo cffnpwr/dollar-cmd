@@ -2,12 +2,12 @@
 name = "dollar-cmd"
 version = "1.0.0"
 edition = "2024"
-description = "Executes its arguments as a command, so a pasted `$ cmd args` line just works"
+description = "Executes its arguments as a command, so a pasted `$`, `%` or `#` prompt line just works"
 repository = "https://github.com/cffnpwr/dollar-cmd"
 license = "MIT"
 
 [dependencies]
-clap = { version = "=4.6.4", features = ["derive"] }
+clap = { version = "=4.6.4", features = ["derive", "string"] }
 
 [dev-dependencies]
 rstest = "=0.26.1"
