@@ -1,9 +1,29 @@
+use std::fs;
+use std::os::unix::fs::symlink;
+use std::path::{Path, PathBuf};
 use std::process::{Command, Output};
 
 use rstest::rstest;
 
 fn run(args: &[&str]) -> Output {
     Command::new(env!("CARGO_BIN_EXE_dollar-cmd"))
+        .args(args)
+        .output()
+        .expect("failed to spawn the binary under test")
+}
+
+/// テスト間でリンク名が衝突しないよう、`scope`ごとに別ディレクトリへ張る。
+fn run_named(scope: &str, name: &str, args: &[&str]) -> Output {
+    let dir = Path::new(env!("CARGO_TARGET_TMPDIR")).join(scope);
+    fs::create_dir_all(&dir).expect("failed to create the link directory");
+
+    let link: PathBuf = dir.join(name);
+    if link.symlink_metadata().is_ok() {
+        fs::remove_file(&link).expect("failed to remove the stale link");
+    }
+    symlink(env!("CARGO_BIN_EXE_dollar-cmd"), &link).expect("failed to link the binary under test");
+
+    Command::new(&link)
         .args(args)
         .output()
         .expect("failed to spawn the binary under test")
@@ -108,4 +128,40 @@ fn negative_reports_permission_denied() {
     assert_eq!(exit_code(&output), 126);
     assert!(output.stdout.is_empty());
     assert!(!output.stderr.is_empty());
+}
+
+#[rstest]
+#[case::positive_dollar("$")]
+#[case::positive_percent("%")]
+#[case::positive_hash("#")]
+fn positive_executes_command_under_every_prompt_marker(#[case] name: &str) {
+    let output = run_named("exec", name, &["echo", "hello"]);
+
+    assert_eq!(exit_code(&output), 0);
+    assert_eq!(String::from_utf8_lossy(&output.stdout), "hello\n");
+}
+
+#[rstest]
+#[case::positive_dollar("$")]
+#[case::positive_percent("%")]
+#[case::positive_hash("#")]
+fn positive_names_itself_after_the_invoked_name_in_help(#[case] name: &str) {
+    let output = run_named("help", name, &["--help"]);
+
+    assert_eq!(exit_code(&output), 0);
+    assert!(String::from_utf8_lossy(&output.stdout).contains(&format!("Usage: {name} ")));
+}
+
+#[rstest]
+#[case::negative_dollar("$")]
+#[case::negative_percent("%")]
+#[case::negative_hash("#")]
+fn negative_names_itself_after_the_invoked_name_in_errors(#[case] name: &str) {
+    let output = run_named("error", name, &["dollar-cmd-no-such-command"]);
+
+    assert_eq!(exit_code(&output), 127);
+    assert!(
+        String::from_utf8_lossy(&output.stderr)
+            .starts_with(&format!("{name}: command not found: "))
+    );
 }

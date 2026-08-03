@@ -14,24 +14,28 @@
 $ cargo build --release
 ```
 
-これをサイトのコピーボタンでコピーすると `$` ごとコピーされることが多く、シェルに貼り付けると失敗します。
+どの記号が付くかは筆者の使ったシェルによって変わり、sh・bashなら `$`、csh・zshなら `%`、rootシェルなら `#` になります。
+
+これをサイトのコピーボタンでコピーすると記号ごとコピーされることが多く、シェルに貼り付けると失敗します。
 
 ```console
 zsh: command not found: $
 ```
 
-`dollar-cmd` は、`PATH` 上に置く `$` という名前の実行ファイルです。
-シェルがリテラルの `$` を実行しようとしたときにこのコマンドが起動し、残りを独立したコマンドとして実行するため、貼り付けた行がそのまま動きます。
+`dollar-cmd` は、これらの記号の名前で `PATH` 上に置く実行ファイルです。
+シェルがリテラルの記号を実行しようとしたときにこのコマンドが起動し、残りを独立したコマンドとして実行するため、貼り付けた行がそのまま動きます。
 
 ## How to Install
 
-このクレートがビルドするバイナリ名は `dollar-cmd` です。インストール後に `PATH` 上へ `$` としてリンクしてください。
+このクレートがビルドするバイナリ名は `dollar-cmd` です。インストール後に `PATH` 上へ `$`・`%`・`#` としてリンクしてください。
 
 ### cargo install
 
 ```sh
 cargo install --git https://github.com/cffnpwr/dollar-cmd
 ln -s ~/.cargo/bin/dollar-cmd ~/.cargo/bin/'$'
+ln -s ~/.cargo/bin/dollar-cmd ~/.cargo/bin/'%'
+ln -s ~/.cargo/bin/dollar-cmd ~/.cargo/bin/'#'
 ```
 
 ### ソースからビルド
@@ -42,7 +46,29 @@ cd dollar-cmd
 cargo build --release
 ```
 
-ビルドした `target/release/dollar-cmd` を、`$` という名前で `PATH` 上の任意の場所に配置します。
+ビルドした `target/release/dollar-cmd` を、`$`・`%`・`#` という名前で `PATH` 上の任意の場所に配置します。
+
+### `%`・`#` のためのシェル設定
+
+`$` はリンクを張るだけで動きます。
+残る2つはシェルが `PATH` を探すより前に横取りするため、シェルの起動ファイルに1行ずつ設定が必要です。
+
+`%` はbash・zshのどちらでもジョブ指定の開始として解釈され、`%1` は `fg %1` と同義になります。
+alias展開はそれより前に行われるので、リンクの絶対パスへのaliasを張ります。
+
+```sh
+alias '%'="$HOME/.cargo/bin/%"
+```
+
+`#` はbashではコメントの開始になります。対話シェルでは `interactive_comments` がデフォルトで有効なためです。
+コメントの除去はalias展開より前段なのでaliasでは回避できず、このオプションを無効にする必要があります。
+
+```sh
+shopt -u interactive_comments
+```
+
+無効にしている間は、対話中のbashで `ls # list files` のような行末コメントが使えなくなります。
+zshは `INTERACTIVE_COMMENTS` がデフォルトで未設定なので、`#` は設定なしで動きます。
 
 ## How to Use
 
@@ -50,6 +76,8 @@ cargo build --release
 
 ```sh
 $ echo hello
+% echo hello
+# echo hello
 ```
 
 ```console
@@ -63,7 +91,8 @@ hello
 $ -- ls -al
 ```
 
-`$` は `execvp` で自身を対象プロセスに置き換えるため、終了コードとシグナルは実行したコマンドのものになります。
+記号は `execvp` で自身を対象プロセスに置き換えるため、終了コードとシグナルは実行したコマンドのものになります。
+ヘルプとエラーメッセージは、起動に使われた記号の名前で表示されます。
 
 ### Options
 

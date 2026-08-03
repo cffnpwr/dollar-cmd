@@ -130,6 +130,8 @@ jobs:
             cp "$binary" "$tmpdir/\$"
             cp LICENSE README.md README-ja.md "$tmpdir/"
             chmod +x "$tmpdir/\$"
+            ln -s '$' "$tmpdir/%"
+            ln -s '$' "$tmpdir/#"
             tar -czf "dollar-cmd_${version}_${target}.tar.gz" -C "$tmpdir" .
             rm -rf "$tmpdir"
           done
