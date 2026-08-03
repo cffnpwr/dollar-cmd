@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.1.0](https://github.com/cffnpwr/dollar-cmd/compare/v1.0.0...v1.1.0) (2026-08-03)
+
+
+### Features
+
+* :sparkles: support % and # prompt markers ([#50](https://github.com/cffnpwr/dollar-cmd/issues/50)) ([2a19e2b](https://github.com/cffnpwr/dollar-cmd/commit/2a19e2b69a48355bf51e74c63290cbef8db7d05a))
+
+
+### Bug Fixes
+
+* **deps:** :package: update rust crate clap to v4.6.3 ([#26](https://github.com/cffnpwr/dollar-cmd/issues/26)) ([833f581](https://github.com/cffnpwr/dollar-cmd/commit/833f5815e7260545c66dc8d19803565ab1622bca))
+* **deps:** :package: update rust crate clap to v4.6.4 ([#32](https://github.com/cffnpwr/dollar-cmd/issues/32)) ([da42cca](https://github.com/cffnpwr/dollar-cmd/commit/da42cca73b08abc7b2fae30087eff89bde237a6b))
+
 ## 1.0.0 (2026-07-18)
 
 
