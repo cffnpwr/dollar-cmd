@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.1](https://github.com/cffnpwr/dollar-cmd/compare/v1.1.0...v1.1.1) (2026-08-22)
+
+
+### Bug Fixes
+
+* **deps:** :package: update rust crate clap to v4.6.5 ([#56](https://github.com/cffnpwr/dollar-cmd/issues/56)) ([4a60121](https://github.com/cffnpwr/dollar-cmd/commit/4a60121563cb283dcdaa5a0185fb629e9fafaec9))
+* **deps:** :package: update rust crate clap to v4.6.6 ([#68](https://github.com/cffnpwr/dollar-cmd/issues/68)) ([7d4c861](https://github.com/cffnpwr/dollar-cmd/commit/7d4c861e1a877c4bf1c76688adc62e697369c678))
+
 ## [1.1.0](https://github.com/cffnpwr/dollar-cmd/compare/v1.0.0...v1.1.0) (2026-08-03)
 
 
