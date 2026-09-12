@@ -1,6 +1,6 @@
 [tools]
 yamlfmt = "0.21.0"
-tombi = "1.5.2"
+tombi = "1.5.4"
 "aqua:numtide/treefmt" = "2.6.0"
 "aqua:taiki-e/cargo-llvm-cov" = "0.9.0"
 
