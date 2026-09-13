@@ -10,7 +10,7 @@ license = "MIT"
 clap = { version = "=4.6.6", features = ["derive", "string"] }
 
 [dev-dependencies]
-rstest = "=0.26.1"
+rstest = "=0.27.0"
 
 [profile.release]
 opt-level = "s"
