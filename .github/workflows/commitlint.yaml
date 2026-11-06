@@ -12,7 +12,7 @@ permissions: {}
 
 jobs:
   commitlint:
-    uses: cffnpwr/actions/.github/workflows/commitlint.yaml@a483b9d624bdac9cd76f9feb7425a002b92e987e # main
+    uses: cffnpwr/actions/.github/workflows/commitlint.yaml@2cfa265cdfaf92bcafe070d7859e5ec1d50edfa1 # main
     permissions:
       contents: read
       actions: read
